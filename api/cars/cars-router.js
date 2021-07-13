@@ -16,9 +16,20 @@ router.get("/:id", md.checkCarId, (req, res, next) => {
   res.json(req.car);
 });
 
-router.post("/", (req, res, next) => {
-  res.json("create new car");
-});
+router.post(
+  "/",
+  md.checkCarPayload,
+  md.checkVinNumberValid,
+  md.checkVinNumberUnique,
+  async (req, res, next) => {
+    try {
+      const newCar = await Car.create(req.body);
+      res.status(201).json(newCar);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 router.use((err, req, res, next) => {
   res.status(err.status || 500).json({
