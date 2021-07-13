@@ -1,5 +1,6 @@
 const express = require("express");
 const Car = require("./cars-model");
+const md = require("./cars-middleware");
 
 const router = express.Router();
 
@@ -11,8 +12,8 @@ router.get("/", (req, res, next) => {
     .catch(next);
 });
 
-router.get("/:id", (req, res, next) => {
-  res.json("get car by id");
+router.get("/:id", md.checkCarId, (req, res, next) => {
+  res.json(req.car);
 });
 
 router.post("/", (req, res, next) => {
